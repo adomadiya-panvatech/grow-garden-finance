@@ -48,7 +48,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen bg-garden-gradient">
       <Navigation />
-      
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -64,11 +64,11 @@ const Profile = () => {
         </div>
 
         {/* Profile Settings */}
-        <Card className="garden-card mb-8 max-w-2xl mx-auto">
+        <Card className="garden-card mb-8 max-w-3xl mx-auto">
           <CardHeader>
             <CardTitle className="text-green-800 flex items-center justify-between">
               ⚙️ Profile Settings
-              <Button 
+              <Button
                 onClick={() => editing ? handleSave() : setEditing(true)}
                 className="bg-green-600 hover:bg-green-700"
               >
@@ -91,7 +91,7 @@ const Profile = () => {
                     className="mt-1"
                   />
                 </div>
-                
+
                 <div>
                   <Label>Choose Your Avatar</Label>
                   <div className="grid grid-cols-6 gap-3 mt-2">
@@ -99,11 +99,10 @@ const Profile = () => {
                       <button
                         key={avatar}
                         onClick={() => setSelectedAvatar(avatar)}
-                        className={`text-4xl p-3 rounded-lg border-2 transition-all hover:scale-110 ${
-                          selectedAvatar === avatar 
-                            ? 'border-green-500 bg-green-50' 
-                            : 'border-gray-200 hover:border-green-300'
-                        }`}
+                        className={`text-4xl p-3 rounded-lg border-2 transition-all hover:scale-110 ${selectedAvatar === avatar
+                          ? 'border-green-500 bg-green-50'
+                          : 'border-gray-200 hover:border-green-300'
+                          }`}
                       >
                         {avatar}
                       </button>
@@ -137,140 +136,185 @@ const Profile = () => {
         </Card>
 
         {/* Stats Overview */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="garden-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-green-800 flex items-center">
-                💰 Total Saved
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">
-                ${stats.totalSavings.toFixed(2)}
-              </div>
-            </CardContent>
-          </Card>
+        {user.role !== "admin" &&
+          <>
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <Card className="garden-card">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-green-800 flex items-center">
+                    💰 Total Saved
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-green-600">
+                    ${stats.totalSavings.toFixed(2)}
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="garden-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-green-800 flex items-center">
-                📅 Days Active
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600">
-                {stats.daysActive}
-              </div>
-            </CardContent>
-          </Card>
+              <Card className="garden-card">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-green-800 flex items-center">
+                    📅 Days Active
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-green-600">
+                    {stats.daysActive}
+                  </div>
+                </CardContent>
+              </Card>
 
-          <Card className="garden-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-green-800 flex items-center">
-                🔥 Current Streak
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-orange-500">
-                {stats.currentStreak} days
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Card className="garden-card">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg text-green-800 flex items-center">
+                    🔥 Current Streak
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold text-orange-500">
+                    {stats.currentStreak} days
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-        {/* Detailed Stats */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <Card className="garden-card">
-            <CardHeader>
-              <CardTitle className="text-green-800">📊 Your Stats</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center space-x-2">
-                    <span>🏆</span>
-                    <span className="text-green-700">Current Level</span>
-                  </span>
-                  <span className="font-bold text-2xl text-green-800">{stats.level}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center space-x-2">
-                    <span>🌱</span>
-                    <span className="text-green-700">Plants Grown</span>
-                  </span>
-                  <span className="font-bold text-green-800">{stats.plantsGrown}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center space-x-2">
-                    <span>🏅</span>
-                    <span className="text-green-700">Badges Earned</span>
-                  </span>
-                  <span className="font-bold text-green-800">{stats.badgesEarned}</span>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center space-x-2">
-                    <span>💎</span>
-                    <span className="text-green-700">Matching Earned</span>
-                  </span>
-                  <span className="font-bold text-green-800">
-                    ${(stats.totalSavings * 0.05).toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Recent Achievements */}
-          <Card className="garden-card">
-            <CardHeader>
-              <CardTitle className="text-green-800">🏅 Recent Achievements</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {achievements.slice(0, 4).map((achievement, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                    <span className="text-2xl">{achievement.emoji}</span>
-                    <div>
-                      <p className="font-medium text-green-800">{achievement.name}</p>
-                      <p className="text-sm text-green-600">{achievement.description}</p>
-                      <p className="text-xs text-green-500">
-                        {new Date(achievement.date).toLocaleDateString()}
-                      </p>
+            <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <Card className="garden-card">
+                <CardHeader>
+                  <CardTitle className="text-green-800">📊 Your Stats</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center space-x-2">
+                        <span>🏆</span>
+                        <span className="text-green-700">Current Level</span>
+                      </span>
+                      <span className="font-bold text-2xl text-green-800">{stats.level}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center space-x-2">
+                        <span>🌱</span>
+                        <span className="text-green-700">Plants Grown</span>
+                      </span>
+                      <span className="font-bold text-green-800">{stats.plantsGrown}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center space-x-2">
+                        <span>🏅</span>
+                        <span className="text-green-700">Badges Earned</span>
+                      </span>
+                      <span className="font-bold text-green-800">{stats.badgesEarned}</span>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center space-x-2">
+                        <span>💎</span>
+                        <span className="text-green-700">Matching Earned</span>
+                      </span>
+                      <span className="font-bold text-green-800">
+                        ${(stats.totalSavings * 0.05).toFixed(2)}
+                      </span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                </CardContent>
+              </Card>
 
-        {/* All Badges */}
-        <Card className="garden-card">
-          <CardHeader>
-            <CardTitle className="text-green-800">🏆 All Your Badges</CardTitle>
-            <CardDescription>
-              Show off your amazing achievements!
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-3">
-              {user.badges && user.badges.length > 0 ? (
-                user.badges.map((badge, index) => (
-                  <Badge key={index} className="achievement-badge text-lg px-4 py-2">
-                    {badge}
-                  </Badge>
-                ))
-              ) : (
-                <p className="text-green-600 italic">
-                  Start saving to earn your first badge! 🌟
-                </p>
-              )}
+              {/* Recent Achievements */}
+              <Card className="garden-card">
+                <CardHeader>
+                  <CardTitle className="text-green-800">🏅 Recent Achievements</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {achievements.slice(0, 4).map((achievement, index) => (
+                      <div key={index} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
+                        <span className="text-2xl">{achievement.emoji}</span>
+                        <div>
+                          <p className="font-medium text-green-800">{achievement.name}</p>
+                          <p className="text-sm text-green-600">{achievement.description}</p>
+                          <p className="text-xs text-green-500">
+                            {new Date(achievement.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
+
+            {/* All Badges */}
+            <Card className="garden-card">
+              <CardHeader>
+                <CardTitle className="text-green-800">🏆 All Your Badges</CardTitle>
+                <CardDescription>
+                  Show off your amazing achievements!
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-3">
+                  {user.badges && user.badges.length > 0 ? (
+                    user.badges.map((badge, index) => (
+                      <Badge key={index} className="achievement-badge text-lg px-4 py-2">
+                        {badge}
+                      </Badge>
+                    ))
+                  ) : (
+                    <p className="text-green-600 italic">
+                      Start saving to earn your first badge! 🌟
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        }
+
+        {user.role === 'admin' && (
+          <div className="grid gap-6 mb-10">
+            <Card className="garden-card border-blue-300 shadow-md">
+              <CardHeader>
+                <CardTitle className="text-blue-800 text-2xl flex items-center gap-2">
+                  👩‍💼 Admin Dashboard
+                </CardTitle>
+                <CardDescription>
+                  Welcome back, {user.name}! Here's a quick look at how the program is doing.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="p-4 rounded-lg bg-blue-50 border border-blue-100 shadow-sm text-center">
+                    <p className="text-2xl font-bold text-blue-700">1,208</p>
+                    <p className="text-sm text-blue-600">Total Users</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-purple-50 border border-purple-100 shadow-sm text-center">
+                    <p className="text-2xl font-bold text-purple-700">329</p>
+                    <p className="text-sm text-purple-600">Verified Deposits</p>
+                  </div>
+                  <div className="p-4 rounded-lg bg-green-50 border border-green-100 shadow-sm text-center">
+                    <p className="text-2xl font-bold text-green-700">74%</p>
+                    <p className="text-sm text-green-600">Avg Engagement</p>
+                  </div>
+                </div>
+                <div className="mt-6 grid md:grid-cols-2 gap-4">
+                  <div className="bg-blue-100 p-4 rounded-lg">
+                    <p className="font-semibold text-blue-800">👁️ Verifications Pending</p>
+                    <p className="text-blue-700 text-lg mt-1">12 deposits need review</p>
+                  </div>
+                  <div className="bg-yellow-100 p-4 rounded-lg">
+                    <p className="font-semibold text-yellow-800">📣 Upcoming Events</p>
+                    <p className="text-yellow-700 text-lg mt-1">Community Garden Day - July 15</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );

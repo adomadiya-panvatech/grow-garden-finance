@@ -36,7 +36,7 @@ const Navigation = () => {
       case 'admin':
         return [
           { path: '/admin', label: '⚙️ Admin', emoji: '⚙️' },
-          { path: '/garden', label: '🌿 Gardens', emoji: '🌿' },
+          // { path: '/garden', label: '🌿 Gardens', emoji: '🌿' },
           { path: '/profile', label: '👤 Profile', emoji: '👤' },
         ];
       default:
