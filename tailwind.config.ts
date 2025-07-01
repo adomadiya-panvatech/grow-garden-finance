@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -53,7 +52,17 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Growth App custom colors
+				// Ocean Theme colors
+				ocean: {
+					deep: '#0D47A1',
+					blue: '#1976D2',
+					light: '#42A5F5',
+					coral: '#FF7043',
+					warm: '#FFB74D',
+					seafoam: '#4DB6AC',
+					pearl: '#F5F5F5'
+				},
+				// Growth App custom colors (kept for compatibility)
 				garden: {
 					sky: '#87CEEB',
 					grass: '#90EE90',
@@ -64,10 +73,10 @@ export default {
 					gold: '#FFD700'
 				},
 				growth: {
-					seedling: '#90EE90',
-					sprout: '#32CD32',
-					mature: '#228B22',
-					blooming: '#FF69B4'
+					seedling: '#4DB6AC',
+					sprout: '#42A5F5',
+					mature: '#1976D2',
+					blooming: '#FF7043'
 				}
 			},
 			borderRadius: {
@@ -113,6 +122,10 @@ export default {
 				'coin-flip': {
 					'0%': { transform: 'rotateY(0deg)' },
 					'100%': { transform: 'rotateY(360deg)' }
+				},
+				'wave': {
+					'0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+					'50%': { transform: 'translateX(-5px) rotate(1deg)' }
 				}
 			},
 			animation: {
@@ -122,12 +135,15 @@ export default {
 				'bounce-gentle': 'bounce-gentle 2s infinite',
 				'float': 'float 3s ease-in-out infinite',
 				'sparkle': 'sparkle 1.5s ease-in-out infinite',
-				'coin-flip': 'coin-flip 0.6s ease-in-out'
+				'coin-flip': 'coin-flip 0.6s ease-in-out',
+				'wave': 'wave 2s ease-in-out infinite'
 			},
 			backgroundImage: {
+				'ocean-gradient': 'linear-gradient(180deg, #E3F2FD 0%, #B3E5FC 30%, #4FC3F7 70%, #29B6F6 100%)',
 				'garden-gradient': 'linear-gradient(180deg, #87CEEB 0%, #90EE90 50%, #D2B48C 100%)',
 				'sky-gradient': 'linear-gradient(180deg, #87CEEB 0%, #B0E0E6 100%)',
-				'earth-gradient': 'linear-gradient(180deg, #90EE90 0%, #D2B48C 100%)'
+				'earth-gradient': 'linear-gradient(180deg, #90EE90 0%, #D2B48C 100%)',
+				'ocean-depth': 'linear-gradient(180deg, #E1F5FE 0%, #B3E5FC 50%, #4FC3F7 100%)'
 			}
 		}
 	},
