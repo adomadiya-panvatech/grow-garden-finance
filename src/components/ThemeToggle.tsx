@@ -9,8 +9,26 @@ const ThemeToggle = () => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  const getNextTheme = () => {
+    switch (theme) {
+      case 'ocean': return 'garden';
+      case 'garden': return 'forest';
+      case 'forest': return 'ocean';
+      default: return 'ocean';
+    }
+  };
+
   const toggleTheme = () => {
-    setTheme(theme === 'ocean' ? 'garden' : 'ocean');
+    setTheme(getNextTheme());
+  };
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'ocean': return '🌊 Ocean';
+      case 'garden': return '🌱 Garden';
+      case 'forest': return '🌲 Forest';
+      default: return '🌊 Ocean';
+    }
   };
 
   return (
@@ -18,9 +36,10 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       variant="outline"
       size="sm"
-      className="border-primary/20 hover:bg-primary/10"
+      className="border-primary/20 hover:bg-primary/10 accessible-button"
+      aria-label={`Switch to ${getNextTheme()} theme. Current theme: ${theme}`}
     >
-      {theme === 'ocean' ? '🌊 Ocean' : '🌱 Garden'}
+      {getThemeIcon()}
     </Button>
   );
 };

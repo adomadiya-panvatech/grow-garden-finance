@@ -55,6 +55,39 @@ All colors MUST be HSL.
     --input: 120 20% 85%;
     --ring: 120 65% 35%;
   }
+
+  [data-theme="forest"] {
+    /* Enhanced Forest Theme - Better accessibility */
+    --background: 140 35% 96%;
+    --foreground: 140 25% 8%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 140 25% 8%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 140 25% 8%;
+
+    --primary: 140 70% 25%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 140 15% 88%;
+    --secondary-foreground: 140 25% 12%;
+
+    --muted: 140 10% 90%;
+    --muted-foreground: 140 15% 35%;
+
+    --accent: 45 85% 55%;
+    --accent-foreground: 140 25% 8%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 140 15% 80%;
+    --input: 140 15% 85%;
+    --ring: 140 70% 25%;
+
+    --radius: 0.75rem;
+  }
 }
 
 @layer base {
@@ -70,11 +103,44 @@ All colors MUST be HSL.
   [data-theme="garden"] body {
     @apply bg-garden-gradient;
   }
+
+  [data-theme="forest"] body {
+    @apply bg-forest-gradient;
+  }
+
+  /* Enhanced focus styles for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    [data-theme="forest"] {
+      --foreground: 140 25% 5%;
+      --primary: 140 80% 20%;
+      --border: 140 20% 70%;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 @layer components {
   .garden-card {
     @apply bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg;
+  }
+
+  .forest-card {
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-forest-sage/20 shadow-lg ring-1 ring-forest-sage/10;
   }
   
   .plant-container {
@@ -96,5 +162,26 @@ All colors MUST be HSL.
 
   .ocean-card {
     @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-blue-200/30 shadow-lg;
+  }
+
+  /* Enhanced accessibility components */
+  .accessible-button {
+    @apply relative inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+  }
+
+  .accessible-input {
+    @apply border border-input bg-background px-3 py-2 text-sm rounded-md;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+    min-height: 44px; /* Minimum touch target size */
+  }
+
+  .skip-link {
+    @apply absolute -top-40 left-6 z-[100] bg-background px-4 py-2 text-foreground;
+    @apply focus:top-6 focus:outline-none focus:ring-2 focus:ring-ring;
   }
 }

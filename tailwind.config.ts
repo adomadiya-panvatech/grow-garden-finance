@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -72,6 +73,19 @@ export default {
 					water: '#ADD8E6',
 					gold: '#FFD700'
 				},
+				// Enhanced Forest Theme colors
+				forest: {
+					deep: '#1B4332',      // Deep forest green
+					pine: '#2D5A3D',      // Pine green
+					sage: '#52734D',      // Sage green
+					moss: '#74A478',      // Moss green
+					fern: '#8FBC8F',      // Light fern
+					bark: '#8B4513',      // Tree bark brown
+					earth: '#A0522D',     // Forest earth
+					gold: '#DAA520',      // Forest gold
+					mist: '#F0F8F0',      // Forest mist
+					shadow: '#2F4F2F'     // Forest shadow
+				},
 				growth: {
 					seedling: '#4DB6AC',
 					sprout: '#42A5F5',
@@ -141,6 +155,7 @@ export default {
 			backgroundImage: {
 				'ocean-gradient': 'linear-gradient(180deg, #E3F2FD 0%, #B3E5FC 30%, #4FC3F7 70%, #29B6F6 100%)',
 				'garden-gradient': 'linear-gradient(180deg, #87CEEB 0%, #90EE90 50%, #D2B48C 100%)',
+				'forest-gradient': 'linear-gradient(180deg, #F0F8F0 0%, #8FBC8F 30%, #52734D 70%, #2D5A3D 100%)',
 				'sky-gradient': 'linear-gradient(180deg, #87CEEB 0%, #B0E0E6 100%)',
 				'earth-gradient': 'linear-gradient(180deg, #90EE90 0%, #D2B48C 100%)',
 				'ocean-depth': 'linear-gradient(180deg, #E1F5FE 0%, #B3E5FC 50%, #4FC3F7 100%)'

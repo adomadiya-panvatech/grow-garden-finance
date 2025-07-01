@@ -36,41 +36,96 @@ const AdminDashboard = () => {
     ]
   };
 
+  const getThemeCardClass = () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    switch (theme) {
+      case 'forest': return 'forest-card';
+      case 'garden': return 'garden-card';
+      default: return 'ocean-card';
+    }
+  };
+
+  const getThemeGradient = () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    switch (theme) {
+      case 'forest': return 'bg-forest-gradient';
+      case 'garden': return 'bg-garden-gradient';
+      default: return 'bg-ocean-gradient';
+    }
+  };
+
+  const getThemeColors = () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    switch (theme) {
+      case 'forest': return {
+        primary: 'text-forest-deep',
+        secondary: 'text-forest-pine',
+        accent: 'bg-forest-sage hover:bg-forest-pine',
+        muted: 'text-forest-sage'
+      };
+      case 'garden': return {
+        primary: 'text-green-800',
+        secondary: 'text-green-700',
+        accent: 'bg-green-600 hover:bg-green-700',
+        muted: 'text-green-600'
+      };
+      default: return {
+        primary: 'text-blue-800',
+        secondary: 'text-blue-700',
+        accent: 'bg-blue-600 hover:bg-blue-700',
+        muted: 'text-blue-600'
+      };
+    }
+  };
+
+  const colors = getThemeColors();
+
   return (
-    <div className="min-h-screen bg-garden-gradient">
+    <div className={`min-h-screen ${getThemeGradient()}`}>
+      {/* Skip to main content link for accessibility */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
+      <main id="main-content" className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-green-800 mb-2">
+          <h1 className={`text-4xl font-bold ${colors.primary} mb-2`}>
             ⚙️ Admin Dashboard
           </h1>
-          <p className="text-green-700">
+          <p className={colors.secondary}>
             Growth App System Overview & Management
           </p>
         </div>
 
         {/* Navigation Tabs */}
         <div className="flex justify-center mb-8">
-          <div className="flex space-x-2 bg-white/80 backdrop-blur-sm rounded-lg p-1">
+          <div className="flex space-x-2 bg-white/80 backdrop-blur-sm rounded-lg p-1" role="tablist">
             <Button
               onClick={() => setActiveView('overview')}
               variant={activeView === 'overview' ? 'default' : 'ghost'}
-              className={activeView === 'overview' 
-                ? "bg-green-600 hover:bg-green-700 text-white" 
-                : "text-green-700 hover:text-green-800 hover:bg-green-50"
-              }
+              className={`accessible-button ${activeView === 'overview' 
+                ? `${colors.accent} text-white` 
+                : `${colors.secondary} hover:${colors.secondary} hover:bg-white/50`
+              }`}
+              role="tab"
+              aria-selected={activeView === 'overview'}
+              aria-controls="overview-panel"
             >
               📊 Overview
             </Button>
             <Button
               onClick={() => setActiveView('users')}
               variant={activeView === 'users' ? 'default' : 'ghost'}
-              className={activeView === 'users' 
-                ? "bg-green-600 hover:bg-green-700 text-white" 
-                : "text-green-700 hover:text-green-800 hover:bg-green-50"
-              }
+              className={`accessible-button ${activeView === 'users' 
+                ? `${colors.accent} text-white` 
+                : `${colors.secondary} hover:${colors.secondary} hover:bg-white/50`
+              }`}
+              role="tab"
+              aria-selected={activeView === 'users'}
+              aria-controls="users-panel"
             >
               👥 User Management
             </Button>
@@ -79,60 +134,60 @@ const AdminDashboard = () => {
 
         {/* Content based on active view */}
         {activeView === 'overview' ? (
-          <>
+          <div id="overview-panel" role="tabpanel" aria-labelledby="overview-tab">
             {/* Key Metrics */}
             <div className="grid md:grid-cols-4 gap-6 mb-8">
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 flex items-center">
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
                     👥 Total Users
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-green-600 mb-2">
+                  <div className={`text-3xl font-bold ${colors.muted} mb-2`}>
                     {adminData.totalUsers.toLocaleString()}
                   </div>
-                  <div className="text-sm text-green-700">
+                  <div className={`text-sm ${colors.secondary}`}>
                     {adminData.totalChildren} children, {adminData.totalParents} parents
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 flex items-center">
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
                     💰 Total Savings
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-green-600 mb-2">
+                  <div className={`text-3xl font-bold ${colors.muted} mb-2`}>
                     ${adminData.totalSavings.toLocaleString()}
                   </div>
-                  <div className="text-sm text-green-700">
+                  <div className={`text-sm ${colors.secondary}`}>
                     +${adminData.totalMatching.toLocaleString()} matching
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 flex items-center">
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
                     📊 Avg per Child
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-3xl font-bold text-green-600 mb-2">
+                  <div className={`text-3xl font-bold ${colors.muted} mb-2`}>
                     ${adminData.averageSavingsPerChild}
                   </div>
-                  <div className="text-sm text-green-700">
+                  <div className={`text-sm ${colors.secondary}`}>
                     Per active child
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 flex items-center">
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
                     🔥 Active Streaks
                   </CardTitle>
                 </CardHeader>
@@ -140,7 +195,7 @@ const AdminDashboard = () => {
                   <div className="text-3xl font-bold text-orange-500 mb-2">
                     {adminData.activeStreaks}
                   </div>
-                  <div className="text-sm text-green-700">
+                  <div className={`text-sm ${colors.secondary}`}>
                     Children with 3+ day streaks
                   </div>
                 </CardContent>
@@ -150,9 +205,9 @@ const AdminDashboard = () => {
             {/* Management Sections */}
             <div className="grid md:grid-cols-2 gap-6 mb-8">
               {/* Recent Registrations */}
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className="text-green-800">📝 Recent Registrations</CardTitle>
+                  <CardTitle className={colors.primary}>📝 Recent Registrations</CardTitle>
                   <CardDescription>
                     New users awaiting verification
                   </CardDescription>
@@ -163,10 +218,10 @@ const AdminDashboard = () => {
                       <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                         <div>
                           <p className="font-medium">{registration.name}</p>
-                          <p className="text-sm text-green-600 capitalize">{registration.role}</p>
+                          <p className={`text-sm ${colors.muted} capitalize`}>{registration.role}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm text-green-700">
+                          <p className={`text-sm ${colors.secondary}`}>
                             {new Date(registration.date).toLocaleDateString()}
                           </p>
                           <Badge variant={registration.verified ? "default" : "secondary"}>
@@ -180,9 +235,9 @@ const AdminDashboard = () => {
               </Card>
 
               {/* Top Performers */}
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className="text-green-800">🏆 Top Savers</CardTitle>
+                  <CardTitle className={colors.primary}>🏆 Top Savers</CardTitle>
                   <CardDescription>
                     Children with highest savings
                   </CardDescription>
@@ -197,11 +252,11 @@ const AdminDashboard = () => {
                           </div>
                           <div>
                             <p className="font-medium">{performer.name}</p>
-                            <p className="text-sm text-green-600">Level {performer.level}</p>
+                            <p className={`text-sm ${colors.muted}`}>Level {performer.level}</p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-green-800">
+                          <p className={`font-bold ${colors.primary}`}>
                             ${performer.savings}
                           </p>
                         </div>
@@ -214,51 +269,51 @@ const AdminDashboard = () => {
 
             {/* System Health */}
             <div className="grid md:grid-cols-3 gap-6">
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className="text-green-800">⚡ System Status</CardTitle>
+                  <CardTitle className={colors.primary}>⚡ System Status</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
-                      <span className="text-green-700">Server Health</span>
-                      <Badge className="bg-green-600">✓ Healthy</Badge>
+                      <span className={colors.secondary}>Server Health</span>
+                      <Badge className={colors.accent}>✓ Healthy</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-700">Database</span>
-                      <Badge className="bg-green-600">✓ Online</Badge>
+                      <span className={colors.secondary}>Database</span>
+                      <Badge className={colors.accent}>✓ Online</Badge>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-green-700">API Response</span>
-                      <Badge className="bg-green-600">{"< 200ms"}</Badge>
+                      <span className={colors.secondary}>API Response</span>
+                      <Badge className={colors.accent}>{"< 200ms"}</Badge>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className="text-green-800">📈 Growth Metrics</CardTitle>
+                  <CardTitle className={colors.primary}>📈 Growth Metrics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm text-green-700">User Growth</span>
+                        <span className={`text-sm ${colors.secondary}`}>User Growth</span>
                         <span className="text-sm font-medium">+15%</span>
                       </div>
                       <Progress value={85} />
                     </div>
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm text-green-700">Engagement</span>
+                        <span className={`text-sm ${colors.secondary}`}>Engagement</span>
                         <span className="text-sm font-medium">+22%</span>
                       </div>
                       <Progress value={92} />
                     </div>
                     <div>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm text-green-700">Savings Rate</span>
+                        <span className={`text-sm ${colors.secondary}`}>Savings Rate</span>
                         <span className="text-sm font-medium">+8%</span>
                       </div>
                       <Progress value={78} />
@@ -267,9 +322,9 @@ const AdminDashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="garden-card">
+              <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className="text-green-800">⚠️ Alerts</CardTitle>
+                  <CardTitle className={colors.primary}>⚠️ Alerts</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -279,21 +334,23 @@ const AdminDashboard = () => {
                       </p>
                       <p className="text-xs text-yellow-600">Requires parent approval</p>
                     </div>
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <p className="text-sm font-medium text-green-800">
+                    <div className={`p-3 ${colors.accent.includes('forest') ? 'bg-forest-mist' : 'bg-green-50'} border ${colors.accent.includes('forest') ? 'border-forest-sage' : 'border-green-200'} rounded-lg`}>
+                      <p className={`text-sm font-medium ${colors.primary}`}>
                         All systems operational
                       </p>
-                      <p className="text-xs text-green-600">No critical issues</p>
+                      <p className={`text-xs ${colors.muted}`}>No critical issues</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          </>
+          </div>
         ) : (
-          <UserManagement />
+          <div id="users-panel" role="tabpanel" aria-labelledby="users-tab">
+            <UserManagement />
+          </div>
         )}
-      </div>
+      </main>
     </div>
   );
 };
