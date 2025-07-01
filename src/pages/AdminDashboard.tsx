@@ -198,7 +198,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-green-700">API Response</span>
-                  <Badge className="bg-green-600">< 200ms</Badge>
+                  <Badge className="bg-green-600">{"< 200ms"}</Badge>
                 </div>
               </div>
             </CardContent>
