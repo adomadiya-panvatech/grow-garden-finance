@@ -135,7 +135,7 @@ const Dashboard = () => {
                   </Button>
                 </div>
                 <Link to="/garden">
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 mt-3">
                     💰 Add Custom Amount
                   </Button>
                 </Link>
