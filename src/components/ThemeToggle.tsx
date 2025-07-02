@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = React.useState('ocean');
+  const [theme, setTheme] = React.useState('garden');
 
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -11,10 +11,10 @@ const ThemeToggle = () => {
 
   const getNextTheme = () => {
     switch (theme) {
-      case 'ocean': return 'garden';
-      case 'garden': return 'forest';
-      case 'forest': return 'ocean';
-      default: return 'ocean';
+      case 'garden': return 'ocean';
+      case 'ocean': return 'forest';
+      case 'forest': return 'garden';
+      default: return 'garden';
     }
   };
 
@@ -24,10 +24,10 @@ const ThemeToggle = () => {
 
   const getThemeIcon = () => {
     switch (theme) {
-      case 'ocean': return '🌊 Ocean';
       case 'garden': return '🌱 Garden';
+      case 'ocean': return '🌊 Ocean';
       case 'forest': return '🌲 Forest';
-      default: return '🌊 Ocean';
+      default: return '🌱 Garden';
     }
   };
 

@@ -9,51 +9,51 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Ocean Theme - Blues and corals for trust + warmth */
-    --background: 200 40% 95%;
-    --foreground: 210 15% 15%;
+    /* Garden Theme - Primary theme focusing on greens and nature */
+    --background: 120 60% 95%;
+    --foreground: 120 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 15% 15%;
+    --card-foreground: 120 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 15% 15%;
+    --popover-foreground: 120 15% 15%;
 
-    --primary: 205 75% 45%;
+    --primary: 120 65% 35%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 200 25% 88%;
-    --secondary-foreground: 210 15% 25%;
+    --secondary: 120 20% 90%;
+    --secondary-foreground: 120 15% 25%;
 
-    --muted: 200 20% 92%;
-    --muted-foreground: 210 10% 45%;
+    --muted: 120 15% 92%;
+    --muted-foreground: 120 10% 45%;
 
-    --accent: 16 85% 65%;
-    --accent-foreground: 210 15% 15%;
+    --accent: 60 100% 75%;
+    --accent-foreground: 120 15% 15%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 120 40% 98%;
 
-    --border: 200 20% 85%;
-    --input: 200 20% 85%;
-    --ring: 205 75% 45%;
+    --border: 120 20% 85%;
+    --input: 120 20% 85%;
+    --ring: 120 65% 35%;
 
     --radius: 0.75rem;
   }
 
-  [data-theme="garden"] {
-    /* Original Garden Theme */
-    --background: 120 60% 95%;
-    --foreground: 120 15% 15%;
-    --primary: 120 65% 35%;
+  [data-theme="ocean"] {
+    /* Ocean Theme - Blues and corals for trust + warmth */
+    --background: 200 40% 95%;
+    --foreground: 210 15% 15%;
+    --primary: 205 75% 45%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 120 20% 90%;
-    --secondary-foreground: 120 15% 25%;
-    --accent: 60 100% 75%;
-    --accent-foreground: 120 15% 15%;
-    --border: 120 20% 85%;
-    --input: 120 20% 85%;
-    --ring: 120 65% 35%;
+    --secondary: 200 25% 88%;
+    --secondary-foreground: 210 15% 25%;
+    --accent: 16 85% 65%;
+    --accent-foreground: 210 15% 15%;
+    --border: 200 20% 85%;
+    --input: 200 20% 85%;
+    --ring: 205 75% 45%;
   }
 
   [data-theme="forest"] {
@@ -96,12 +96,12 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-ocean-gradient text-foreground font-sans;
+    @apply bg-garden-gradient text-foreground font-sans;
     min-height: 100vh;
   }
 
-  [data-theme="garden"] body {
-    @apply bg-garden-gradient;
+  [data-theme="ocean"] body {
+    @apply bg-ocean-gradient;
   }
 
   [data-theme="forest"] body {
@@ -136,11 +136,15 @@ All colors MUST be HSL.
 
 @layer components {
   .garden-card {
-    @apply bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg;
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl border border-green-200/30 shadow-lg;
   }
 
   .forest-card {
     @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-forest-sage/20 shadow-lg ring-1 ring-forest-sage/10;
+  }
+
+  .ocean-card {
+    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-blue-200/30 shadow-lg;
   }
   
   .plant-container {
@@ -158,10 +162,6 @@ All colors MUST be HSL.
   
   .achievement-badge {
     @apply bg-gradient-to-r from-accent to-primary text-white px-4 py-2 rounded-full font-bold shadow-lg animate-bounce-gentle;
-  }
-
-  .ocean-card {
-    @apply bg-white/90 backdrop-blur-sm rounded-2xl border border-blue-200/30 shadow-lg;
   }
 
   /* Enhanced accessibility components */

@@ -36,7 +36,6 @@ const Navigation = () => {
       case 'admin':
         return [
           { path: '/admin', label: '⚙️ Admin', emoji: '⚙️' },
-          // { path: '/garden', label: '🌿 Gardens', emoji: '🌿' },
           { path: '/profile', label: '👤 Profile', emoji: '👤' },
         ];
       default:
@@ -51,7 +50,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-2xl">🌱</span>
-            <span className="text-xl font-bold text-green-800">Growth App</span>
+            <span className="text-xl font-bold text-green-800">Growth Garden</span>
           </Link>
 
           {/* Navigation Items */}
