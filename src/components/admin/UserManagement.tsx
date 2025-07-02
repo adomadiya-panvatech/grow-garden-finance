@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -125,6 +124,20 @@ const UserManagement = () => {
     notes: ''
   });
 
+  const [editParentForm, setEditParentForm] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    status: 'active' as 'active' | 'inactive'
+  });
+
+  const [editChildForm, setEditChildForm] = useState({
+    name: '',
+    age: '',
+    notes: '',
+    status: 'active' as 'active' | 'inactive'
+  });
+
   const handleAddParent = () => {
     if (!newParent.name || !newParent.email) {
       toast({
@@ -227,6 +240,78 @@ const UserManagement = () => {
     toast({
       title: "Child Removed",
       description: `${child.name} has been removed.`,
+    });
+  };
+
+  const handleEditParent = (parent: Parent) => {
+    setEditingParent(parent);
+    setEditParentForm({
+      name: parent.name,
+      email: parent.email,
+      phone: parent.phone,
+      status: parent.status
+    });
+  };
+
+  const handleUpdateParent = () => {
+    if (!editingParent || !editParentForm.name || !editParentForm.email) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedParents = parents.map(p => 
+      p.id === editingParent.id 
+        ? { ...p, ...editParentForm }
+        : p
+    );
+
+    setParents(updatedParents);
+    setEditingParent(null);
+    setEditParentForm({ name: '', email: '', phone: '', status: 'active' });
+    
+    toast({
+      title: "Success! ✏️",
+      description: `${editParentForm.name}'s information has been updated.`
+    });
+  };
+
+  const handleEditChild = (child: Child) => {
+    setEditingChild(child);
+    setEditChildForm({
+      name: child.name,
+      age: child.age.toString(),
+      notes: child.notes,
+      status: child.status
+    });
+  };
+
+  const handleUpdateChild = () => {
+    if (!editingChild || !editChildForm.name || !editChildForm.age) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const updatedChildren = children.map(c => 
+      c.id === editingChild.id 
+        ? { ...c, name: editChildForm.name, age: parseInt(editChildForm.age), notes: editChildForm.notes, status: editChildForm.status }
+        : c
+    );
+
+    setChildren(updatedChildren);
+    setEditingChild(null);
+    setEditChildForm({ name: '', age: '', notes: '', status: 'active' });
+    
+    toast({
+      title: "Success! ✏️",
+      description: `${editChildForm.name}'s information has been updated.`
     });
   };
 
@@ -406,6 +491,132 @@ const UserManagement = () => {
         )}
       </div>
 
+      {/* Edit Parent Dialog */}
+      <Dialog open={!!editingParent} onOpenChange={() => setEditingParent(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Parent</DialogTitle>
+            <DialogDescription>
+              Update the parent's information.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-parent-name">Name *</Label>
+              <Input
+                id="edit-parent-name"
+                value={editParentForm.name}
+                onChange={(e) => setEditParentForm({...editParentForm, name: e.target.value})}
+                placeholder="Enter parent's full name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-parent-email">Email *</Label>
+              <Input
+                id="edit-parent-email"
+                type="email"
+                value={editParentForm.email}
+                onChange={(e) => setEditParentForm({...editParentForm, email: e.target.value})}
+                placeholder="Enter email address"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-parent-phone">Phone Number</Label>
+              <Input
+                id="edit-parent-phone"
+                value={editParentForm.phone}
+                onChange={(e) => setEditParentForm({...editParentForm, phone: e.target.value})}
+                placeholder="Enter phone number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-parent-status">Status</Label>
+              <select
+                id="edit-parent-status"
+                value={editParentForm.status}
+                onChange={(e) => setEditParentForm({...editParentForm, status: e.target.value as 'active' | 'inactive'})}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setEditingParent(null)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUpdateParent} className="bg-green-600 hover:bg-green-700">
+                Update Parent
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Child Dialog */}
+      <Dialog open={!!editingChild} onOpenChange={() => setEditingChild(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Child</DialogTitle>
+            <DialogDescription>
+              Update the child's information.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-child-name">Name *</Label>
+              <Input
+                id="edit-child-name"
+                value={editChildForm.name}
+                onChange={(e) => setEditChildForm({...editChildForm, name: e.target.value})}
+                placeholder="Enter child's name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-child-age">Age *</Label>
+              <Input
+                id="edit-child-age"
+                type="number"
+                min="3"
+                max="18"
+                value={editChildForm.age}
+                onChange={(e) => setEditChildForm({...editChildForm, age: e.target.value})}
+                placeholder="Enter child's age"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-child-notes">Notes</Label>
+              <Input
+                id="edit-child-notes"
+                value={editChildForm.notes}
+                onChange={(e) => setEditChildForm({...editChildForm, notes: e.target.value})}
+                placeholder="Any special notes or interests"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-child-status">Status</Label>
+              <select
+                id="edit-child-status"
+                value={editChildForm.status}
+                onChange={(e) => setEditChildForm({...editChildForm, status: e.target.value as 'active' | 'inactive'})}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setEditingChild(null)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUpdateChild} className="bg-blue-600 hover:bg-blue-700">
+                Update Child
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Content */}
       {activeTab === 'parents' ? (
         <Card className="garden-card">
@@ -450,7 +661,7 @@ const UserManagement = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setEditingParent(parent)}
+                          onClick={() => handleEditParent(parent)}
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -517,7 +728,7 @@ const UserManagement = () => {
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => setEditingChild(child)}
+                      onClick={() => handleEditChild(child)}
                       className="flex-1"
                     >
                       <Edit className="w-4 h-4 mr-1" />
