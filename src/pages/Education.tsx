@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,12 +6,15 @@ import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import GameModal from '@/components/games/GameModal';
 
 const Education = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [selectedQuiz, setSelectedQuiz] = useState<number | null>(null);
   const [quizAnswers, setQuizAnswers] = useState<{ [key: number]: string }>({});
+  const [gameModalOpen, setGameModalOpen] = useState(false);
+  const [currentGame, setCurrentGame] = useState<'coin-counter' | 'savings-sprint' | 'budget-builder' | null>(null);
 
   if (!user) return null;
 
@@ -24,7 +26,8 @@ const Education = () => {
       emoji: '🪙',
       difficulty: 'Easy',
       points: 10,
-      ageGroup: '5-8'
+      ageGroup: '5-8',
+      gameType: 'coin-counter' as const
     },
     {
       id: 2,
@@ -33,7 +36,8 @@ const Education = () => {
       emoji: '🏃‍♂️',
       difficulty: 'Medium',
       points: 20,
-      ageGroup: '8-12'
+      ageGroup: '8-12',
+      gameType: 'savings-sprint' as const
     },
     {
       id: 3,
@@ -42,7 +46,8 @@ const Education = () => {
       emoji: '📊',
       difficulty: 'Hard',
       points: 30,
-      ageGroup: '12-15'
+      ageGroup: '12-15',
+      gameType: 'budget-builder' as const
     }
   ];
 
@@ -104,10 +109,15 @@ const Education = () => {
     }
   ];
 
-  const handleGamePlay = (gameId: number) => {
+  const handleGamePlay = (gameType: 'coin-counter' | 'savings-sprint' | 'budget-builder') => {
+    setCurrentGame(gameType);
+    setGameModalOpen(true);
+  };
+
+  const handleGameComplete = (points: number) => {
     toast({
-      title: "Game Started! 🎮",
-      description: "Have fun learning about money!",
+      title: "Congratulations! 🎉",
+      description: `You earned ${points} points! Great job learning about money!`,
     });
   };
 
@@ -177,7 +187,7 @@ const Education = () => {
                     <span className="font-bold text-green-800">{game.points} points</span>
                   </div>
                   <Button 
-                    onClick={() => handleGamePlay(game.id)}
+                    onClick={() => handleGamePlay(game.gameType)}
                     className="w-full bg-green-600 hover:bg-green-700"
                   >
                     🎮 Play Game
@@ -295,6 +305,13 @@ const Education = () => {
           </div>
         </section>
       </div>
+
+      <GameModal
+        isOpen={gameModalOpen}
+        onClose={() => setGameModalOpen(false)}
+        gameType={currentGame}
+        onGameComplete={handleGameComplete}
+      />
     </div>
   );
 };
