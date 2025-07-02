@@ -1,14 +1,26 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import Navigation from '@/components/Navigation';
+import { Plus } from 'lucide-react';
 
 const ParentDashboard = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [isAddChildOpen, setIsAddChildOpen] = useState(false);
+  const [newChild, setNewChild] = useState({
+    name: '',
+    age: '',
+    notes: ''
+  });
 
   if (!user) return null;
 
@@ -27,6 +39,35 @@ const ParentDashboard = () => {
     currentPlant: { name: 'Sunflower', stage: 'growing', emoji: '🌻' }
   };
 
+  const handleAddChild = () => {
+    if (!newChild.name || !newChild.age) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // In real app, this would be an API call
+    console.log('Adding new child:', {
+      parentId: user.id,
+      parentName: user.name,
+      name: newChild.name,
+      age: parseInt(newChild.age),
+      notes: newChild.notes,
+      createdAt: new Date().toISOString()
+    });
+
+    toast({
+      title: "Success! 🌱",
+      description: `${newChild.name} has been added to your family account!`
+    });
+
+    setNewChild({ name: '', age: '', notes: '' });
+    setIsAddChildOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-garden-gradient">
       <Navigation />
@@ -40,6 +81,66 @@ const ParentDashboard = () => {
           <p className="text-green-700">
             Track {childData.name}'s financial growth journey
           </p>
+        </div>
+
+        {/* Add Child Button */}
+        <div className="flex justify-end mb-6">
+          <Dialog open={isAddChildOpen} onOpenChange={setIsAddChildOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-green-600 hover:bg-green-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Child
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Child</DialogTitle>
+                <DialogDescription>
+                  Add a child to your family account to start their savings journey.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="child-name">Child's Name *</Label>
+                  <Input
+                    id="child-name"
+                    value={newChild.name}
+                    onChange={(e) => setNewChild({...newChild, name: e.target.value})}
+                    placeholder="Enter child's full name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="child-age">Age *</Label>
+                  <Input
+                    id="child-age"
+                    type="number"
+                    min="3"
+                    max="18"
+                    value={newChild.age}
+                    onChange={(e) => setNewChild({...newChild, age: e.target.value})}
+                    placeholder="Enter child's age"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="child-notes">Notes (Optional)</Label>
+                  <Input
+                    id="child-notes"
+                    value={newChild.notes}
+                    onChange={(e) => setNewChild({...newChild, notes: e.target.value})}
+                    placeholder="Interests, goals, or special notes"
+                  />
+                </div>
+                <div className="flex justify-end space-x-2">
+                  <Button variant="outline" onClick={() => setIsAddChildOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleAddChild} className="bg-green-600 hover:bg-green-700">
+                    Add Child
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Child Overview */}

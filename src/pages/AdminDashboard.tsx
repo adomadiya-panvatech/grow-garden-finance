@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,9 +23,11 @@ const AdminDashboard = () => {
     averageSavingsPerChild: 50.78,
     activeStreaks: 234,
     recentRegistrations: [
-      { name: 'Emily Johnson', role: 'child', date: '2024-01-15', verified: true },
+      { name: 'Emily Johnson', role: 'child', parentName: 'Sarah Garden', date: '2024-01-15', verified: true, age: 8 },
       { name: 'Michael Brown', role: 'parent', date: '2024-01-14', verified: false },
-      { name: 'Sarah Wilson', role: 'child', date: '2024-01-13', verified: true },
+      { name: 'Alex Smith', role: 'child', parentName: 'Michael Brown', date: '2024-01-13', verified: true, age: 10 },
+      { name: 'Taylor Green', role: 'child', parentName: 'Lisa Green', date: '2024-01-12', verified: false, age: 7 },
+      { name: 'Jordan Wilson', role: 'parent', date: '2024-01-11', verified: true },
     ],
     pendingVerifications: 12,
     topPerformers: [
@@ -209,7 +210,7 @@ const AdminDashboard = () => {
                 <CardHeader>
                   <CardTitle className={colors.primary}>📝 Recent Registrations</CardTitle>
                   <CardDescription>
-                    New users awaiting verification
+                    New users and children added to the platform
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -217,8 +218,20 @@ const AdminDashboard = () => {
                     {adminData.recentRegistrations.map((registration, index) => (
                       <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                         <div>
-                          <p className="font-medium">{registration.name}</p>
-                          <p className={`text-sm ${colors.muted} capitalize`}>{registration.role}</p>
+                          <p className="font-medium flex items-center">
+                            {registration.role === 'child' ? '🌱' : '👨‍👩‍👧‍👦'} {registration.name}
+                            {registration.role === 'child' && registration.age && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2">
+                                Age {registration.age}
+                              </span>
+                            )}
+                          </p>
+                          <p className={`text-sm ${colors.muted} capitalize`}>
+                            {registration.role}
+                            {registration.role === 'child' && registration.parentName && (
+                              <span className="text-gray-500"> • Parent: {registration.parentName}</span>
+                            )}
+                          </p>
                         </div>
                         <div className="text-right">
                           <p className={`text-sm ${colors.secondary}`}>
