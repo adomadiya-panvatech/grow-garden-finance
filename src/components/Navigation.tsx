@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { Home, TreePine, BookOpen, User, Users, Shield, LogOut } from 'lucide-react';
 
 const Navigation = () => {
   const { user, logout } = useAuth();
@@ -22,21 +23,21 @@ const Navigation = () => {
     switch (user.role) {
       case 'child':
         return [
-          { path: '/dashboard', label: '🏠 Home', emoji: '🏠' },
-          { path: '/garden', label: '🌿 Garden', emoji: '🌿' },
-          { path: '/learn', label: '📚 Learn', emoji: '📚' },
-          { path: '/profile', label: '👤 Profile', emoji: '👤' },
+          { path: '/dashboard', label: 'Home', icon: Home },
+          { path: '/garden', label: 'Garden', icon: TreePine },
+          { path: '/learn', label: 'Learn', icon: BookOpen },
+          { path: '/profile', label: 'Profile', icon: User },
         ];
       case 'parent':
         return [
-          { path: '/parent', label: '👨‍👩‍👧‍👦 Dashboard', emoji: '👨‍👩‍👧‍👦' },
-          { path: '/garden', label: '🌿 Child\'s Garden', emoji: '🌿' },
-          { path: '/profile', label: '👤 Profile', emoji: '👤' },
+          { path: '/parent', label: 'Dashboard', icon: Users },
+          { path: '/garden', label: 'Child\'s Garden', icon: TreePine },
+          { path: '/profile', label: 'Profile', icon: User },
         ];
       case 'admin':
         return [
-          { path: '/admin', label: '⚙️ Admin', emoji: '⚙️' },
-          { path: '/profile', label: '👤 Profile', emoji: '👤' },
+          { path: '/admin', label: 'Admin', icon: Shield },
+          { path: '/profile', label: 'Profile', icon: User },
         ];
       default:
         return [];
@@ -55,19 +56,23 @@ const Navigation = () => {
 
           {/* Navigation Items */}
           <div className="hidden md:flex items-center space-x-1">
-            {getNavItems().map((item) => (
-              <Link key={item.path} to={item.path}>
-                <Button
-                  variant={isActive(item.path) ? "default" : "ghost"}
-                  className={isActive(item.path) 
-                    ? "bg-green-600 hover:bg-green-700 text-white" 
-                    : "text-green-700 hover:text-green-800 hover:bg-green-50"
-                  }
-                >
-                  {item.label}
-                </Button>
-              </Link>
-            ))}
+            {getNavItems().map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <Link key={item.path} to={item.path}>
+                  <Button
+                    variant={isActive(item.path) ? "default" : "ghost"}
+                    className={`flex items-center gap-2 ${isActive(item.path) 
+                      ? "bg-green-600 hover:bg-green-700 text-white" 
+                      : "text-green-700 hover:text-green-800 hover:bg-green-50"
+                    }`}
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    {item.label}
+                  </Button>
+                </Link>
+              );
+            })}
           </div>
 
           {/* User Info & Logout */}
@@ -83,8 +88,9 @@ const Navigation = () => {
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="border-green-600 text-green-600 hover:bg-green-50"
+              className="border-green-600 text-green-600 hover:bg-green-50 flex items-center gap-2"
             >
+              <LogOut className="h-4 w-4" />
               Logout
             </Button>
           </div>
@@ -93,24 +99,27 @@ const Navigation = () => {
         {/* Mobile Navigation */}
         <div className="md:hidden pb-4">
           <div className="flex justify-around">
-            {getNavItems().map((item) => (
-              <Link key={item.path} to={item.path}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`flex flex-col items-center p-2 ${
-                    isActive(item.path) 
-                      ? "text-green-800 bg-green-50" 
-                      : "text-green-600"
-                  }`}
-                >
-                  <span className="text-lg">{item.emoji}</span>
-                  <span className="text-xs mt-1">
-                    {item.label.split(' ')[1] || item.label}
-                  </span>
-                </Button>
-              </Link>
-            ))}
+            {getNavItems().map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <Link key={item.path} to={item.path}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`flex flex-col items-center p-2 ${
+                      isActive(item.path) 
+                        ? "text-green-800 bg-green-50" 
+                        : "text-green-600"
+                    }`}
+                  >
+                    <IconComponent className="h-5 w-5" />
+                    <span className="text-xs mt-1">
+                      {item.label.split(' ')[0]}
+                    </span>
+                  </Button>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Garden from "./pages/Garden";
 import ParentDashboard from "./pages/ParentDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import ApprovalScreen from "./pages/ApprovalScreen";
 import Education from "./pages/Education";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ const App = () => (
               <Route path="/garden" element={<Garden />} />
               <Route path="/parent" element={<ParentDashboard />} />
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/approvals" element={<ApprovalScreen />} />
               <Route path="/learn" element={<Education />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />

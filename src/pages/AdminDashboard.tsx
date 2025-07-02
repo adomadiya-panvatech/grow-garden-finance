@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -6,6 +7,20 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import Navigation from '@/components/Navigation';
 import UserManagement from '@/components/admin/UserManagement';
+import { Link } from 'react-router-dom';
+import { 
+  Users, 
+  DollarSign, 
+  BarChart3, 
+  Flame, 
+  FileText, 
+  Trophy, 
+  Zap, 
+  TrendingUp, 
+  AlertTriangle,
+  CheckCircle,
+  UserCheck
+} from 'lucide-react';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -93,12 +108,23 @@ const AdminDashboard = () => {
       <main id="main-content" className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className={`text-4xl font-bold ${colors.primary} mb-2`}>
-            ⚙️ Admin Dashboard
+          <h1 className={`text-4xl font-bold ${colors.primary} mb-2 flex items-center justify-center gap-2`}>
+            <BarChart3 className="h-8 w-8" />
+            Admin Dashboard
           </h1>
           <p className={colors.secondary}>
             Growth App System Overview & Management
           </p>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="flex justify-center mb-6">
+          <Link to="/admin/approvals">
+            <Button className="bg-orange-600 hover:bg-orange-700 text-white flex items-center gap-2">
+              <UserCheck className="h-4 w-4" />
+              Manage Approvals ({adminData.pendingVerifications})
+            </Button>
+          </Link>
         </div>
 
         {/* Navigation Tabs */}
@@ -107,7 +133,7 @@ const AdminDashboard = () => {
             <Button
               onClick={() => setActiveView('overview')}
               variant={activeView === 'overview' ? 'default' : 'ghost'}
-              className={`accessible-button ${activeView === 'overview' 
+              className={`accessible-button flex items-center gap-2 ${activeView === 'overview' 
                 ? `${colors.accent} text-white` 
                 : `${colors.secondary} hover:${colors.secondary} hover:bg-white/50`
               }`}
@@ -115,12 +141,13 @@ const AdminDashboard = () => {
               aria-selected={activeView === 'overview'}
               aria-controls="overview-panel"
             >
-              📊 Overview
+              <BarChart3 className="h-4 w-4" />
+              Overview
             </Button>
             <Button
               onClick={() => setActiveView('users')}
               variant={activeView === 'users' ? 'default' : 'ghost'}
-              className={`accessible-button ${activeView === 'users' 
+              className={`accessible-button flex items-center gap-2 ${activeView === 'users' 
                 ? `${colors.accent} text-white` 
                 : `${colors.secondary} hover:${colors.secondary} hover:bg-white/50`
               }`}
@@ -128,7 +155,8 @@ const AdminDashboard = () => {
               aria-selected={activeView === 'users'}
               aria-controls="users-panel"
             >
-              👥 User Management
+              <Users className="h-4 w-4" />
+              User Management
             </Button>
           </div>
         </div>
@@ -140,8 +168,9 @@ const AdminDashboard = () => {
             <div className="grid md:grid-cols-4 gap-6 mb-8">
               <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
-                    👥 Total Users
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center gap-2`}>
+                    <Users className="h-5 w-5" />
+                    Total Users
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -156,8 +185,9 @@ const AdminDashboard = () => {
 
               <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
-                    💰 Total Savings
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center gap-2`}>
+                    <DollarSign className="h-5 w-5" />
+                    Total Savings
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -172,8 +202,9 @@ const AdminDashboard = () => {
 
               <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
-                    📊 Avg per Child
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center gap-2`}>
+                    <BarChart3 className="h-5 w-5" />
+                    Avg per Child
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -188,8 +219,9 @@ const AdminDashboard = () => {
 
               <Card className={getThemeCardClass()}>
                 <CardHeader className="pb-3">
-                  <CardTitle className={`text-lg ${colors.primary} flex items-center`}>
-                    🔥 Active Streaks
+                  <CardTitle className={`text-lg ${colors.primary} flex items-center gap-2`}>
+                    <Flame className="h-5 w-5" />
+                    Active Streaks
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -208,7 +240,10 @@ const AdminDashboard = () => {
               {/* Recent Registrations */}
               <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className={colors.primary}>📝 Recent Registrations</CardTitle>
+                  <CardTitle className={`${colors.primary} flex items-center gap-2`}>
+                    <FileText className="h-5 w-5" />
+                    Recent Registrations
+                  </CardTitle>
                   <CardDescription>
                     New users and children added to the platform
                   </CardDescription>
@@ -218,10 +253,15 @@ const AdminDashboard = () => {
                     {adminData.recentRegistrations.map((registration, index) => (
                       <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                         <div>
-                          <p className="font-medium flex items-center">
-                            {registration.role === 'child' ? '🌱' : '👨‍👩‍👧‍👦'} {registration.name}
+                          <p className="font-medium flex items-center gap-2">
+                            {registration.role === 'child' ? (
+                              <Users className="h-4 w-4 text-blue-600" />
+                            ) : (
+                              <Users className="h-4 w-4 text-purple-600" />
+                            )}
+                            {registration.name}
                             {registration.role === 'child' && registration.age && (
-                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full ml-2">
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
                                 Age {registration.age}
                               </span>
                             )}
@@ -237,8 +277,15 @@ const AdminDashboard = () => {
                           <p className={`text-sm ${colors.secondary}`}>
                             {new Date(registration.date).toLocaleDateString()}
                           </p>
-                          <Badge variant={registration.verified ? "default" : "secondary"}>
-                            {registration.verified ? "✓ Verified" : "⏳ Pending"}
+                          <Badge variant={registration.verified ? "default" : "secondary"} className="flex items-center gap-1">
+                            {registration.verified ? (
+                              <>
+                                <CheckCircle className="h-3 w-3" />
+                                Verified
+                              </>
+                            ) : (
+                              "⏳ Pending"
+                            )}
                           </Badge>
                         </div>
                       </div>
@@ -250,7 +297,10 @@ const AdminDashboard = () => {
               {/* Top Performers */}
               <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className={colors.primary}>🏆 Top Savers</CardTitle>
+                  <CardTitle className={`${colors.primary} flex items-center gap-2`}>
+                    <Trophy className="h-5 w-5" />
+                    Top Savers
+                  </CardTitle>
                   <CardDescription>
                     Children with highest savings
                   </CardDescription>
@@ -284,17 +334,26 @@ const AdminDashboard = () => {
             <div className="grid md:grid-cols-3 gap-6">
               <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className={colors.primary}>⚡ System Status</CardTitle>
+                  <CardTitle className={`${colors.primary} flex items-center gap-2`}>
+                    <Zap className="h-5 w-5" />
+                    System Status
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between items-center">
                       <span className={colors.secondary}>Server Health</span>
-                      <Badge className={colors.accent}>✓ Healthy</Badge>
+                      <Badge className={`${colors.accent} flex items-center gap-1`}>
+                        <CheckCircle className="h-3 w-3" />
+                        Healthy
+                      </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className={colors.secondary}>Database</span>
-                      <Badge className={colors.accent}>✓ Online</Badge>
+                      <Badge className={`${colors.accent} flex items-center gap-1`}>
+                        <CheckCircle className="h-3 w-3" />
+                        Online
+                      </Badge>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className={colors.secondary}>API Response</span>
@@ -306,7 +365,10 @@ const AdminDashboard = () => {
 
               <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className={colors.primary}>📈 Growth Metrics</CardTitle>
+                  <CardTitle className={`${colors.primary} flex items-center gap-2`}>
+                    <TrendingUp className="h-5 w-5" />
+                    Growth Metrics
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
@@ -337,18 +399,23 @@ const AdminDashboard = () => {
 
               <Card className={getThemeCardClass()}>
                 <CardHeader>
-                  <CardTitle className={colors.primary}>⚠️ Alerts</CardTitle>
+                  <CardTitle className={`${colors.primary} flex items-center gap-2`}>
+                    <AlertTriangle className="h-5 w-5" />
+                    Alerts
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                      <p className="text-sm font-medium text-yellow-800">
+                      <p className="text-sm font-medium text-yellow-800 flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4" />
                         {adminData.pendingVerifications} pending verifications
                       </p>
                       <p className="text-xs text-yellow-600">Requires parent approval</p>
                     </div>
                     <div className={`p-3 ${colors.accent.includes('forest') ? 'bg-forest-mist' : 'bg-green-50'} border ${colors.accent.includes('forest') ? 'border-forest-sage' : 'border-green-200'} rounded-lg`}>
-                      <p className={`text-sm font-medium ${colors.primary}`}>
+                      <p className={`text-sm font-medium ${colors.primary} flex items-center gap-2`}>
+                        <CheckCircle className="h-4 w-4" />
                         All systems operational
                       </p>
                       <p className={`text-xs ${colors.muted}`}>No critical issues</p>
