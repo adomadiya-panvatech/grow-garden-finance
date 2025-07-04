@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Edit, Trash2, Users, User, Baby } from 'lucide-react';
+import { Plus, Edit, Trash2, Users, User, Baby, GraduationCap, Upload } from 'lucide-react';
 
 interface Parent {
   id: string;
@@ -37,11 +37,11 @@ const UserManagement = () => {
   const [activeTab, setActiveTab] = useState<'parents' | 'children'>('parents');
   const [isAddParentOpen, setIsAddParentOpen] = useState(false);
   const [isAddChildOpen, setIsAddChildOpen] = useState(false);
+  const [isAddLevelOpen, setIsAddLevelOpen] = useState(false);
   const [editingParent, setEditingParent] = useState<Parent | null>(null);
   const [editingChild, setEditingChild] = useState<Child | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Mock data - in real app, this would come from API
   const [parents, setParents] = useState<Parent[]>([
     {
       id: '1',
@@ -136,6 +136,12 @@ const UserManagement = () => {
     age: '',
     notes: '',
     status: 'active' as 'active' | 'inactive'
+  });
+
+  const [newLevel, setNewLevel] = useState({
+    title: '',
+    level: '',
+    file: null as File | null
   });
 
   const handleAddParent = () => {
@@ -315,6 +321,74 @@ const UserManagement = () => {
     });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+      if (allowedTypes.includes(file.type)) {
+        setNewLevel({ ...newLevel, file });
+      } else {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload an image (JPEG, PNG, GIF) or PDF file.",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        // Remove data URL prefix to get just the base64 data
+        const base64Data = base64String.split(',')[1];
+        resolve(base64Data);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleAddLevel = async () => {
+    if (!newLevel.title || !newLevel.level || !newLevel.file) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields and upload a file.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const base64Data = await convertFileToBase64(newLevel.file);
+      
+      const levelData = {
+        base64Data: base64Data,
+        fileType: newLevel.file.type,
+        title: newLevel.title,
+        level: parseInt(newLevel.level)
+      };
+
+      console.log('Level Data:', levelData);
+      
+      setNewLevel({ title: '', level: '', file: null });
+      setIsAddLevelOpen(false);
+      
+      toast({
+        title: "Success! 🎓",
+        description: `Level "${newLevel.title}" has been created.`
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to process the uploaded file.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const filteredParents = parents.filter(parent =>
     parent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     parent.email.toLowerCase().includes(searchTerm.toLowerCase())
@@ -362,133 +436,202 @@ const UserManagement = () => {
           className="max-w-sm"
         />
         
-        {activeTab === 'parents' ? (
-          <Dialog open={isAddParentOpen} onOpenChange={setIsAddParentOpen}>
+        <div className="flex space-x-2">
+          {/* Add Level Button */}
+          <Dialog open={isAddLevelOpen} onOpenChange={setIsAddLevelOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Parent
+              <Button className="bg-purple-600 hover:bg-purple-700">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Add Level
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Parent</DialogTitle>
+                <DialogTitle>Add New Level</DialogTitle>
                 <DialogDescription>
-                  Enter the parent's information to create their account.
+                  Create a new level with title, content, and level number.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="parent-name">Name *</Label>
+                  <Label htmlFor="level-title">Title *</Label>
                   <Input
-                    id="parent-name"
-                    value={newParent.name}
-                    onChange={(e) => setNewParent({...newParent, name: e.target.value})}
-                    placeholder="Enter parent's full name"
+                    id="level-title"
+                    value={newLevel.title}
+                    onChange={(e) => setNewLevel({...newLevel, title: e.target.value})}
+                    placeholder="Enter level title"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="parent-email">Email *</Label>
+                  <Label htmlFor="level-number">Level *</Label>
                   <Input
-                    id="parent-email"
-                    type="email"
-                    value={newParent.email}
-                    onChange={(e) => setNewParent({...newParent, email: e.target.value})}
-                    placeholder="Enter email address"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="parent-phone">Phone Number</Label>
-                  <Input
-                    id="parent-phone"
-                    value={newParent.phone}
-                    onChange={(e) => setNewParent({...newParent, phone: e.target.value})}
-                    placeholder="Enter phone number"
-                  />
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setIsAddParentOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleAddParent} className="bg-green-600 hover:bg-green-700">
-                    Add Parent
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        ) : (
-          <Dialog open={isAddChildOpen} onOpenChange={setIsAddChildOpen}>
-            <DialogTrigger asChild>
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <Plus className="w-4 h-4 mr-2" />
-                Add Child
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Child</DialogTitle>
-                <DialogDescription>
-                  Enter the child's information to create their account.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="child-parent">Parent *</Label>
-                  <select
-                    id="child-parent"
-                    value={newChild.parentId}
-                    onChange={(e) => setNewChild({...newChild, parentId: e.target.value})}
-                    className="w-full p-2 border rounded-md"
-                  >
-                    <option value="">Select a parent</option>
-                    {parents.filter(p => p.status === 'active').map(parent => (
-                      <option key={parent.id} value={parent.id}>{parent.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="child-name">Name *</Label>
-                  <Input
-                    id="child-name"
-                    value={newChild.name}
-                    onChange={(e) => setNewChild({...newChild, name: e.target.value})}
-                    placeholder="Enter child's name"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="child-age">Age *</Label>
-                  <Input
-                    id="child-age"
+                    id="level-number"
                     type="number"
-                    min="3"
-                    max="18"
-                    value={newChild.age}
-                    onChange={(e) => setNewChild({...newChild, age: e.target.value})}
-                    placeholder="Enter child's age"
+                    min="1"
+                    value={newLevel.level}
+                    onChange={(e) => setNewLevel({...newLevel, level: e.target.value})}
+                    placeholder="Enter level number"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="child-notes">Notes</Label>
-                  <Input
-                    id="child-notes"
-                    value={newChild.notes}
-                    onChange={(e) => setNewChild({...newChild, notes: e.target.value})}
-                    placeholder="Any special notes or interests"
-                  />
+                  <Label htmlFor="level-file">Upload Image or PDF *</Label>
+                  <div className="flex items-center space-x-2">
+                    <Input
+                      id="level-file"
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={handleFileChange}
+                      className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                    />
+                    <Upload className="w-4 h-4 text-purple-600" />
+                  </div>
+                  {newLevel.file && (
+                    <p className="text-sm text-green-600 mt-1">
+                      ✓ {newLevel.file.name} selected
+                    </p>
+                  )}
                 </div>
                 <div className="flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setIsAddChildOpen(false)}>
+                  <Button variant="outline" onClick={() => setIsAddLevelOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleAddChild} className="bg-blue-600 hover:bg-blue-700">
-                    Add Child
+                  <Button onClick={handleAddLevel} className="bg-purple-600 hover:bg-purple-700">
+                    Add Level
                   </Button>
                 </div>
               </div>
             </DialogContent>
           </Dialog>
-        )}
+
+          {/* Existing Add Parent/Child Buttons */}
+          {activeTab === 'parents' ? (
+            <Dialog open={isAddParentOpen} onOpenChange={setIsAddParentOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Parent
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Parent</DialogTitle>
+                  <DialogDescription>
+                    Enter the parent's information to create their account.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="parent-name">Name *</Label>
+                    <Input
+                      id="parent-name"
+                      value={newParent.name}
+                      onChange={(e) => setNewParent({...newParent, name: e.target.value})}
+                      placeholder="Enter parent's full name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="parent-email">Email *</Label>
+                    <Input
+                      id="parent-email"
+                      type="email"
+                      value={newParent.email}
+                      onChange={(e) => setNewParent({...newParent, email: e.target.value})}
+                      placeholder="Enter email address"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="parent-phone">Phone Number</Label>
+                    <Input
+                      id="parent-phone"
+                      value={newParent.phone}
+                      onChange={(e) => setNewParent({...newParent, phone: e.target.value})}
+                      placeholder="Enter phone number"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setIsAddParentOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddParent} className="bg-green-600 hover:bg-green-700">
+                      Add Parent
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          ) : (
+            <Dialog open={isAddChildOpen} onOpenChange={setIsAddChildOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Child
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Add New Child</DialogTitle>
+                  <DialogDescription>
+                    Enter the child's information to create their account.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="child-parent">Parent *</Label>
+                    <select
+                      id="child-parent"
+                      value={newChild.parentId}
+                      onChange={(e) => setNewChild({...newChild, parentId: e.target.value})}
+                      className="w-full p-2 border rounded-md"
+                    >
+                      <option value="">Select a parent</option>
+                      {parents.filter(p => p.status === 'active').map(parent => (
+                        <option key={parent.id} value={parent.id}>{parent.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="child-name">Name *</Label>
+                    <Input
+                      id="child-name"
+                      value={newChild.name}
+                      onChange={(e) => setNewChild({...newChild, name: e.target.value})}
+                      placeholder="Enter child's name"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="child-age">Age *</Label>
+                    <Input
+                      id="child-age"
+                      type="number"
+                      min="3"
+                      max="18"
+                      value={newChild.age}
+                      onChange={(e) => setNewChild({...newChild, age: e.target.value})}
+                      placeholder="Enter child's age"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="child-notes">Notes</Label>
+                    <Input
+                      id="child-notes"
+                      value={newChild.notes}
+                      onChange={(e) => setNewChild({...newChild, notes: e.target.value})}
+                      placeholder="Any special notes or interests"
+                    />
+                  </div>
+                  <div className="flex justify-end space-x-2">
+                    <Button variant="outline" onClick={() => setIsAddChildOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleAddChild} className="bg-blue-600 hover:bg-blue-700">
+                      Add Child
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
       </div>
 
       {/* Edit Parent Dialog */}
